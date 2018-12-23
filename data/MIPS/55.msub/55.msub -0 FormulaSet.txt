@@ -1,0 +1,101 @@
+
+---------------------------------- Formula Set ----------------------------------
+
+PRE	F0= CP0[ASID]=pid
+	F1= PC[Out]=addr
+	F2= IMem[{pid,addr}]={28,rS,rT,0,0,4}
+	F3= GPR[rS]=a
+	F4= GPR[rT]=b
+	F5= [Lo]=lo
+	F6= [Hi]=hi
+
+IF	F7= PC.Out=>IMem.RAddr
+	F8= CP0.ASID=>IMem.ASID
+	F9= IMem.Out=>IR.In
+	F10= CtrlPC=0
+	F11= CtrlPCInc=1
+	F12= CtrlIMem=0
+	F13= CtrlASIDIn=0
+	F14= CtrlCP0=0
+	F15= CtrlEPCIn=0
+	F16= CtrlExCodeIn=0
+	F17= CtrlIR=1
+	F18= CtrlGPR=0
+	F19= CtrlA=0
+	F20= CtrlB=0
+	F21= CtrlHi=0
+	F22= CtrlLo=0
+
+ID	F23= IR.Out31_26=>CU.Op
+	F24= IR.Out25_21=>GPR.RReg1
+	F25= IR.Out20_16=>GPR.RReg2
+	F26= IR.Out5_0=>CU.IRFunc
+	F27= GPR.Rdata1=>A.In
+	F28= GPR.Rdata2=>B.In
+	F29= CtrlPC=0
+	F30= CtrlPCInc=0
+	F31= CtrlIMem=0
+	F32= CtrlASIDIn=0
+	F33= CtrlCP0=0
+	F34= CtrlEPCIn=0
+	F35= CtrlExCodeIn=0
+	F36= CtrlIR=0
+	F37= CtrlGPR=0
+	F38= CtrlA=1
+	F39= CtrlB=1
+	F40= CtrlHi=0
+	F41= CtrlLo=0
+
+EX	F42= Hi.Out=>MDU.Hi
+	F43= Lo.Out=>MDU.Lo
+	F44= A.Out=>MDU.A
+	F45= B.Out=>MDU.B
+	F46= MDU.Func=6'b000111
+	F47= MDU.hi=>Hi.In
+	F48= MDU.lo=>Lo.In
+	F49= CtrlPC=0
+	F50= CtrlPCInc=0
+	F51= CtrlIMem=0
+	F52= CtrlASIDIn=0
+	F53= CtrlCP0=0
+	F54= CtrlEPCIn=0
+	F55= CtrlExCodeIn=0
+	F56= CtrlIR=0
+	F57= CtrlGPR=0
+	F58= CtrlA=0
+	F59= CtrlB=0
+	F60= CtrlHi=1
+	F61= CtrlLo=1
+
+MEM	F62= CtrlPC=0
+	F63= CtrlPCInc=0
+	F64= CtrlIMem=0
+	F65= CtrlASIDIn=0
+	F66= CtrlCP0=0
+	F67= CtrlEPCIn=0
+	F68= CtrlExCodeIn=0
+	F69= CtrlIR=0
+	F70= CtrlGPR=0
+	F71= CtrlA=0
+	F72= CtrlB=0
+	F73= CtrlHi=0
+	F74= CtrlLo=0
+
+WB	F75= CtrlPC=0
+	F76= CtrlPCInc=0
+	F77= CtrlIMem=0
+	F78= CtrlASIDIn=0
+	F79= CtrlCP0=0
+	F80= CtrlEPCIn=0
+	F81= CtrlExCodeIn=0
+	F82= CtrlIR=0
+	F83= CtrlGPR=0
+	F84= CtrlA=0
+	F85= CtrlB=0
+	F86= CtrlHi=0
+	F87= CtrlLo=0
+
+POST	F88= PC[Out]=addr+4
+	F89= [Lo]=({hi,lo}-a×b)[31:0]
+	F90= [Hi]=({hi,lo}-a×b)[63:32]
+

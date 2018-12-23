@@ -1,0 +1,108 @@
+
+---------------------------------- Formula Set ----------------------------------
+
+PRE	F0= CP0[ASID]=pid
+	F1= PC[Out]=addr
+	F2= IMem[{pid,addr}]={28,rS,rT,rD,0,33}
+	F3= ICache[addr]={28,rS,rT,rD,0,33}
+	F4= GPR[rS]=a
+
+IF	F5= CP0.ASID=>IMMU.PID
+	F6= PC.Out=>IMMU.IEA
+	F7= IMMU.Addr=>IAddrReg.In
+	F8= IMMU.Hit=>CU.IMMUHit
+	F9= PC.Out=>ICache.IEA
+	F10= ICache.Out=>IR.In
+	F11= ICache.Out=>ICacheReg.In
+	F12= ICache.Hit=>CU.ICacheHit
+	F13= CtrlASIDIn=0
+	F14= CtrlCP0=0
+	F15= CtrlEPCIn=0
+	F16= CtrlExCodeIn=0
+	F17= CtrlIMMU=0
+	F18= CtrlPC=0
+	F19= CtrlPCInc=1
+	F20= CtrlIAddrReg=0
+	F21= CtrlICache=0
+	F22= CtrlIR=1
+	F23= CtrlICacheReg=0
+	F24= CtrlIMem=0
+	F25= CtrlIRMux=0
+	F26= CtrlGPR=0
+	F27= CtrlA=0
+
+ID	F43= IR.Out31_26=>CU.Op
+	F44= IR.Out25_21=>GPR.RReg1
+	F45= IR.Out5_0=>CU.IRFunc
+	F46= GPR.Rdata1=>A.In
+	F47= CtrlASIDIn=0
+	F48= CtrlCP0=0
+	F49= CtrlEPCIn=0
+	F50= CtrlExCodeIn=0
+	F51= CtrlIMMU=0
+	F52= CtrlPC=0
+	F53= CtrlPCInc=0
+	F54= CtrlIAddrReg=0
+	F55= CtrlICache=0
+	F56= CtrlIR=0
+	F57= CtrlICacheReg=0
+	F58= CtrlIMem=0
+	F59= CtrlIRMux=0
+	F60= CtrlGPR=0
+	F61= CtrlA=1
+
+EX	F62= A.Out=>CountUnit.In
+	F63= CountUnit.Func=6'b000001
+	F64= CountUnit.Out=>GPR.WData
+	F65= IR.Out15_11=>GPR.WReg
+	F66= CtrlASIDIn=0
+	F67= CtrlCP0=0
+	F68= CtrlEPCIn=0
+	F69= CtrlExCodeIn=0
+	F70= CtrlIMMU=0
+	F71= CtrlPC=0
+	F72= CtrlPCInc=0
+	F73= CtrlIAddrReg=0
+	F74= CtrlICache=0
+	F75= CtrlIR=0
+	F76= CtrlICacheReg=0
+	F77= CtrlIMem=0
+	F78= CtrlIRMux=0
+	F79= CtrlGPR=1
+	F80= CtrlA=0
+
+MEM	F81= CtrlASIDIn=0
+	F82= CtrlCP0=0
+	F83= CtrlEPCIn=0
+	F84= CtrlExCodeIn=0
+	F85= CtrlIMMU=0
+	F86= CtrlPC=0
+	F87= CtrlPCInc=0
+	F88= CtrlIAddrReg=0
+	F89= CtrlICache=0
+	F90= CtrlIR=0
+	F91= CtrlICacheReg=0
+	F92= CtrlIMem=0
+	F93= CtrlIRMux=0
+	F94= CtrlGPR=0
+	F95= CtrlA=0
+
+WB	F126= CtrlASIDIn=0
+	F127= CtrlCP0=0
+	F128= CtrlEPCIn=0
+	F129= CtrlExCodeIn=0
+	F130= CtrlIMMU=0
+	F131= CtrlPC=0
+	F132= CtrlPCInc=0
+	F133= CtrlIAddrReg=0
+	F134= CtrlICache=0
+	F135= CtrlIR=0
+	F136= CtrlICacheReg=0
+	F137= CtrlIMem=0
+	F138= CtrlIRMux=0
+	F139= CtrlGPR=0
+	F140= CtrlA=0
+
+POST	F141= PC[Out]=addr+4
+	F142= GPR[rD]=Count1(a)
+

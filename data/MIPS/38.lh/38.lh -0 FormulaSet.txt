@@ -1,0 +1,112 @@
+
+---------------------------------- Formula Set ----------------------------------
+
+PRE	F0= CP0[ASID]=pid
+	F1= PC[Out]=addr
+	F2= IMem[{pid,addr}]={33,rS,rT,offset}
+	F3= GPR[rS]=base
+	F4= DMem[{pid,base+{16{offset[15]},offset}}]=a
+
+IF	F5= PC.Out=>IMem.RAddr
+	F6= CP0.ASID=>IMem.ASID
+	F7= IMem.Out=>IR.In
+	F8= CtrlPC=0
+	F9= CtrlPCInc=1
+	F10= CtrlIMem=0
+	F11= CtrlASIDIn=0
+	F12= CtrlCP0=0
+	F13= CtrlEPCIn=0
+	F14= CtrlExCodeIn=0
+	F15= CtrlIR=1
+	F16= CtrlGPR=0
+	F17= CtrlA=0
+	F18= CtrlB=0
+	F19= CtrlALUOut=0
+	F20= CtrlDMem=0
+	F21= CtrlDMem8Word=0
+	F22= CtrlDR=0
+
+ID	F23= IR.Out31_26=>CU.Op
+	F24= IR.Out25_21=>GPR.RReg1
+	F25= IR.Out15_0=>IMMEXT.In
+	F26= GPR.Rdata1=>A.In
+	F27= IMMEXT.Out=>B.In
+	F28= CtrlPC=0
+	F29= CtrlPCInc=0
+	F30= CtrlIMem=0
+	F31= CtrlASIDIn=0
+	F32= CtrlCP0=0
+	F33= CtrlEPCIn=0
+	F34= CtrlExCodeIn=0
+	F35= CtrlIR=0
+	F36= CtrlGPR=0
+	F37= CtrlA=1
+	F38= CtrlB=1
+	F39= CtrlALUOut=0
+	F40= CtrlDMem=0
+	F41= CtrlDMem8Word=0
+	F42= CtrlDR=0
+
+EX	F43= A.Out=>ALU.A
+	F44= B.Out=>ALU.B
+	F45= ALU.Func=6'b010010
+	F46= ALU.Out=>ALUOut.In
+	F47= CtrlPC=0
+	F48= CtrlPCInc=0
+	F49= CtrlIMem=0
+	F50= CtrlASIDIn=0
+	F51= CtrlCP0=0
+	F52= CtrlEPCIn=0
+	F53= CtrlExCodeIn=0
+	F54= CtrlIR=0
+	F55= CtrlGPR=0
+	F56= CtrlA=0
+	F57= CtrlB=0
+	F58= CtrlALUOut=1
+	F59= CtrlDMem=0
+	F60= CtrlDMem8Word=0
+	F61= CtrlDR=0
+
+MEM	F62= ALUOut.Out=>DMem.RAddr
+	F63= CP0.ASID=>DMem.ASID
+	F64= DMem.Out=>DR.In
+	F65= CtrlPC=0
+	F66= CtrlPCInc=0
+	F67= CtrlIMem=0
+	F68= CtrlASIDIn=0
+	F69= CtrlCP0=0
+	F70= CtrlEPCIn=0
+	F71= CtrlExCodeIn=0
+	F72= CtrlIR=0
+	F73= CtrlGPR=0
+	F74= CtrlA=0
+	F75= CtrlB=0
+	F76= CtrlALUOut=0
+	F77= CtrlDMem=0
+	F78= CtrlDMem8Word=0
+	F79= CtrlDR=1
+
+WB	F80= IR.Out20_16=>GPR.WReg
+	F81= DR.Out=>MemDataSel.In
+	F82= ALUOut.Out1_0=>MemDataSel.Addr
+	F83= MemDataSel.Func=6'b001010
+	F84= MemDataSel.Out=>GPR.WData
+	F85= CtrlPC=0
+	F86= CtrlPCInc=0
+	F87= CtrlIMem=0
+	F88= CtrlASIDIn=0
+	F89= CtrlCP0=0
+	F90= CtrlEPCIn=0
+	F91= CtrlExCodeIn=0
+	F92= CtrlIR=0
+	F93= CtrlGPR=1
+	F94= CtrlA=0
+	F95= CtrlB=0
+	F96= CtrlALUOut=0
+	F97= CtrlDMem=0
+	F98= CtrlDMem8Word=0
+	F99= CtrlDR=0
+
+POST	F100= PC[Out]=addr+4
+	F101= GPR[rT]={16{a[{base+{16{offset[15]},offset}}[1:0]*8+15,{base+{16{offset[15]},offset}}[1:0]*8][15]},a[{base+{16{offset[15]},offset}}[1:0]*8+15,{base+{16{offset[15]},offset}}[1:0]*8]}
+

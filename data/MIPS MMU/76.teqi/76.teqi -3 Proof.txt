@@ -1,0 +1,61 @@
+
+------------------------------------- Proof -------------------------------------
+
+PRE	S0= PC[Out]=addr                                            Premise(F1)
+	S1= ICache[addr]={1,rs,12,imm}                              Premise(F3)
+	S2= GPR[rs]=a                                               Premise(F4)
+
+IF	S3= PC.Out=addr                                             PC-Out(S0)
+	S4= PC.Out=>ICache.IEA                                      Premise(F9)
+	S5= ICache.IEA=addr                                         Path(S3,S4)
+	S6= ICache.Out={1,rs,12,imm}                                ICache-Search(S5,S1)
+	S7= ICache.Out=>IR.In                                       Premise(F10)
+	S8= IR.In={1,rs,12,imm}                                     Path(S6,S7)
+	S9= CtrlIR=1                                                Premise(F22)
+	S10= [IR]={1,rs,12,imm}                                     IR-Write(S8,S9)
+	S11= CtrlGPR=0                                              Premise(F26)
+	S12= GPR[rs]=a                                              GPR-Hold(S2,S11)
+
+ID	S13= IR.Out25_21=rs                                         IR-Out(S10)
+	S14= IR.Out15_0=imm                                         IR-Out(S10)
+	S15= IR.Out25_21=>GPR.RReg1                                 Premise(F50)
+	S16= GPR.RReg1=rs                                           Path(S13,S15)
+	S17= GPR.Rdata1=a                                           GPR-Read(S16,S12)
+	S18= IR.Out15_0=>IMMEXT.In                                  Premise(F52)
+	S19= IMMEXT.In=imm                                          Path(S14,S18)
+	S20= IMMEXT.Out={16{imm[15]},imm}                           IMMEXT(S19)
+	S21= GPR.Rdata1=>A.In                                       Premise(F53)
+	S22= A.In=a                                                 Path(S17,S21)
+	S23= IMMEXT.Out=>B.In                                       Premise(F54)
+	S24= B.In={16{imm[15]},imm}                                 Path(S20,S23)
+	S25= CtrlA=1                                                Premise(F69)
+	S26= [A]=a                                                  A-Write(S22,S25)
+	S27= CtrlB=1                                                Premise(F70)
+	S28= [B]={16{imm[15]},imm}                                  B-Write(S24,S27)
+
+EX	S29= A.Out=a                                                A-Out(S26)
+	S30= B.Out={16{imm[15]},imm}                                B-Out(S28)
+	S31= A.Out=>CMPU.A                                          Premise(F73)
+	S32= CMPU.A=a                                               Path(S29,S31)
+	S33= B.Out=>CMPU.B                                          Premise(F74)
+	S34= CMPU.B={16{imm[15]},imm}                               Path(S30,S33)
+	S35= CMPU.zero=CompareS(a,{16{imm[15]},imm})                CMPU-CMPS(S32,S34)
+	S36= CMPU.zero=>ConditionReg.In                             Premise(F76)
+	S37= ConditionReg.In=CompareS(a,{16{imm[15]},imm})          Path(S35,S36)
+	S38= CtrlConditionReg=1                                     Premise(F93)
+	S39= [ConditionReg]=CompareS(a,{16{imm[15]},imm})           ConditionReg-Write(S37,S38)
+
+MEM	S40= CtrlConditionReg=0                                     Premise(F116)
+	S41= [ConditionReg]=CompareS(a,{16{imm[15]},imm})           ConditionReg-Hold(S39,S40)
+
+MEM(DMMU1)	S42= CtrlConditionReg=0                                     Premise(F134)
+	S43= [ConditionReg]=CompareS(a,{16{imm[15]},imm})           ConditionReg-Hold(S41,S42)
+
+MEM(DMMU2)	S44= CtrlConditionReg=0                                     Premise(F152)
+	S45= [ConditionReg]=CompareS(a,{16{imm[15]},imm})           ConditionReg-Hold(S43,S44)
+
+WB	S46= CtrlConditionReg=0                                     Premise(F170)
+	S47= [ConditionReg]=CompareS(a,{16{imm[15]},imm})           ConditionReg-Hold(S45,S46)
+
+POST	S47= [ConditionReg]=CompareS(a,{16{imm[15]},imm})           ConditionReg-Hold(S45,S46)
+

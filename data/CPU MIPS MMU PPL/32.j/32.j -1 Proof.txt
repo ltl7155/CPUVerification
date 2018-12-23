@@ -1,0 +1,45 @@
+
+------------------------------------- Proof -------------------------------------
+
+PRE	S0= PC[Out]=addr                                            Premise(F1)
+	S1= ICache[addr]={2,imm}                                    Premise(F3)
+
+IF	S2= PC.Out=addr                                             PC-Out(S0)
+	S3= PC.Out=>ICache.IEA                                      Premise(F41)
+	S4= ICache.IEA=addr                                         Path(S2,S3)
+	S5= ICache.Out={2,imm}                                      ICache-Search(S4,S1)
+	S6= ICache.Out=>IR_ID.In                                    Premise(F48)
+	S7= IR_ID.In={2,imm}                                        Path(S5,S6)
+	S8= CtrlIR_ID=1                                             Premise(F78)
+	S9= [IR_ID]={2,imm}                                         IR_ID-Write(S7,S8)
+	S10= CtrlPC=0                                               Premise(F79)
+	S11= CtrlPCInc=1                                            Premise(F80)
+	S12= PC[CIA]=addr                                           PC-Inc(S0,S10,S11)
+
+ID	S13= IR_ID.Out25_0=imm                                      IR-Out(S9)
+	S14= PC.CIA31_28=addr[31:28]                                PC-Out(S12)
+	S15= IR_ID.Out25_0=>ADDREXT.In                              Premise(F190)
+	S16= ADDREXT.In=imm                                         Path(S13,S15)
+	S17= PC.CIA31_28=>ADDREXT.PCpart                            Premise(F191)
+	S18= ADDREXT.PCpart=addr[31:28]                             Path(S14,S17)
+	S19= ADDREXT.Out={addr[31:28],imm,2'b0}                     ADDREXT-EXT(S18,S16)
+	S20= ADDREXT.Out=>PC.In                                     Premise(F241)
+	S21= PC.In={addr[31:28],imm,2'b0}                           Path(S19,S20)
+	S22= CtrlPC=1                                               Premise(F267)
+	S23= CtrlPCInc=0                                            Premise(F268)
+	S24= PC[Out]={addr[31:28],imm,2'b0}                         PC-Write(S21,S22,S23)
+
+EX	S25= CtrlPC=0                                               Premise(F361)
+	S26= CtrlPCInc=0                                            Premise(F362)
+	S27= PC[Out]={addr[31:28],imm,2'b0}                         PC-Hold(S24,S25,S26)
+
+MEM	S28= CtrlPC=0                                               Premise(F455)
+	S29= CtrlPCInc=0                                            Premise(F456)
+	S30= PC[Out]={addr[31:28],imm,2'b0}                         PC-Hold(S27,S28,S29)
+
+WB	S31= CtrlPC=0                                               Premise(F737)
+	S32= CtrlPCInc=0                                            Premise(F738)
+	S33= PC[Out]={addr[31:28],imm,2'b0}                         PC-Hold(S30,S31,S32)
+
+POST	S33= PC[Out]={addr[31:28],imm,2'b0}                         PC-Hold(S30,S31,S32)
+

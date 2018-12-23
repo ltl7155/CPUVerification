@@ -1,0 +1,123 @@
+
+---------------------------------- Formula Set ----------------------------------
+
+PRE	F0= CP0[ASID]=pid
+	F1= PC[Out]=addr
+	F2= IMem[{pid,addr}]={0,rS,0,0,hint,8}
+	F3= GPR[rS]=a
+
+IF	F4= CP0.ASID=>IMMU.PID
+	F5= PC.Out=>IMMU.IEA
+	F6= IMMU.Addr=>IAddrReg.In
+	F7= IMMU.Hit=>CU.IMMUHit
+	F8= PC.Out=>ICache.IEA
+	F9= ICache.Out=>IR.In
+	F10= ICache.Out=>ICacheReg.In
+	F11= ICache.Hit=>CU.ICacheHit
+	F12= CtrlASIDIn=0
+	F13= CtrlCP0=0
+	F14= CtrlEPCIn=0
+	F15= CtrlExCodeIn=0
+	F16= CtrlIMMU=0
+	F17= CtrlPC=0
+	F18= CtrlPCInc=0
+	F19= CtrlIAddrReg=1
+	F20= CtrlICache=0
+	F21= CtrlIR=0
+	F22= CtrlICacheReg=1
+	F23= CtrlIMem=0
+	F24= CtrlIRMux=0
+	F25= CtrlGPR=0
+
+IF(IMMU)	F26= CU.IMMUHit=>CU.IMMUHit
+	F27= CU.ICacheHit=>CU.ICacheHit
+	F28= IAddrReg.Out=>IMem.RAddr
+	F29= IMem.Out=>IRMux.MemData
+	F30= ICacheReg.Out=>IRMux.CacheData
+	F31= CU.IMMUHit=>IRMux.MemSel
+	F32= CU.ICacheHit=>IRMux.CacheSel
+	F33= IRMux.Out=>IR.In
+	F34= IMem.MEM8WordOut=>ICache.WData
+	F35= PC.Out=>ICache.IEA
+	F36= CtrlASIDIn=0
+	F37= CtrlCP0=0
+	F38= CtrlEPCIn=0
+	F39= CtrlExCodeIn=0
+	F40= CtrlIMMU=0
+	F41= CtrlPC=0
+	F42= CtrlPCInc=1
+	F43= CtrlIAddrReg=0
+	F44= CtrlICache=1
+	F45= CtrlIR=1
+	F46= CtrlICacheReg=0
+	F47= CtrlIMem=0
+	F48= CtrlIRMux=0
+	F49= CtrlGPR=0
+
+ID	F50= IR.Out31_26=>CU.Op
+	F51= IR.Out25_21=>GPR.RReg1
+	F52= IR.Out5_0=>CU.IRFunc
+	F53= GPR.Rdata1=>PC.In
+	F54= CtrlASIDIn=0
+	F55= CtrlCP0=0
+	F56= CtrlEPCIn=0
+	F57= CtrlExCodeIn=0
+	F58= CtrlIMMU=0
+	F59= CtrlPC=1
+	F60= CtrlPCInc=0
+	F61= CtrlIAddrReg=0
+	F62= CtrlICache=0
+	F63= CtrlIR=0
+	F64= CtrlICacheReg=0
+	F65= CtrlIMem=0
+	F66= CtrlIRMux=0
+	F67= CtrlGPR=0
+
+EX	F68= CtrlASIDIn=0
+	F69= CtrlCP0=0
+	F70= CtrlEPCIn=0
+	F71= CtrlExCodeIn=0
+	F72= CtrlIMMU=0
+	F73= CtrlPC=0
+	F74= CtrlPCInc=0
+	F75= CtrlIAddrReg=0
+	F76= CtrlICache=0
+	F77= CtrlIR=0
+	F78= CtrlICacheReg=0
+	F79= CtrlIMem=0
+	F80= CtrlIRMux=0
+	F81= CtrlGPR=0
+
+MEM	F82= CtrlASIDIn=0
+	F83= CtrlCP0=0
+	F84= CtrlEPCIn=0
+	F85= CtrlExCodeIn=0
+	F86= CtrlIMMU=0
+	F87= CtrlPC=0
+	F88= CtrlPCInc=0
+	F89= CtrlIAddrReg=0
+	F90= CtrlICache=0
+	F91= CtrlIR=0
+	F92= CtrlICacheReg=0
+	F93= CtrlIMem=0
+	F94= CtrlIRMux=0
+	F95= CtrlGPR=0
+
+WB	F124= CtrlASIDIn=0
+	F125= CtrlCP0=0
+	F126= CtrlEPCIn=0
+	F127= CtrlExCodeIn=0
+	F128= CtrlIMMU=0
+	F129= CtrlPC=0
+	F130= CtrlPCInc=0
+	F131= CtrlIAddrReg=0
+	F132= CtrlICache=0
+	F133= CtrlIR=0
+	F134= CtrlICacheReg=0
+	F135= CtrlIMem=0
+	F136= CtrlIRMux=0
+	F137= CtrlGPR=0
+
+POST	F138= PC[Out]=a
+	F139= ICache[line_addr]=IMemGet8Word({pid,addr})
+

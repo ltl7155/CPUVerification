@@ -1,0 +1,7 @@
+
+------------------------------ Verification Result ------------------------------
+
+Result: Incorrectness
+Used Time: 7248ms
+Extracted Formulas: 784
+Procedures: 16

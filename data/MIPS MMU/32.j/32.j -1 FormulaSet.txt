@@ -1,0 +1,92 @@
+
+---------------------------------- Formula Set ----------------------------------
+
+PRE	F0= CP0[ASID]=pid
+	F1= PC[Out]=addr
+	F2= IMem[{pid,addr}]={2,imm}
+	F3= ICache[addr]={2,imm}
+
+IF	F4= CP0.ASID=>IMMU.PID
+	F5= PC.Out=>IMMU.IEA
+	F6= IMMU.Addr=>IAddrReg.In
+	F7= IMMU.Hit=>CU.IMMUHit
+	F8= PC.Out=>ICache.IEA
+	F9= ICache.Out=>IR.In
+	F10= ICache.Out=>ICacheReg.In
+	F11= ICache.Hit=>CU.ICacheHit
+	F12= CtrlASIDIn=0
+	F13= CtrlCP0=0
+	F14= CtrlEPCIn=0
+	F15= CtrlExCodeIn=0
+	F16= CtrlIMMU=0
+	F17= CtrlPC=0
+	F18= CtrlPCInc=1
+	F19= CtrlIAddrReg=0
+	F20= CtrlICache=0
+	F21= CtrlIR=1
+	F22= CtrlICacheReg=0
+	F23= CtrlIMem=0
+	F24= CtrlIRMux=0
+
+ID	F38= IR.Out31_26=>CU.Op
+	F39= PC.CIA31_28=>ADDREXT.PCpart
+	F40= IR.Out25_0=>ADDREXT.In
+	F41= ADDREXT.Out=>PC.In
+	F42= CtrlASIDIn=0
+	F43= CtrlCP0=0
+	F44= CtrlEPCIn=0
+	F45= CtrlExCodeIn=0
+	F46= CtrlIMMU=0
+	F47= CtrlPC=1
+	F48= CtrlPCInc=0
+	F49= CtrlIAddrReg=0
+	F50= CtrlICache=0
+	F51= CtrlIR=0
+	F52= CtrlICacheReg=0
+	F53= CtrlIMem=0
+	F54= CtrlIRMux=0
+
+EX	F55= CtrlASIDIn=0
+	F56= CtrlCP0=0
+	F57= CtrlEPCIn=0
+	F58= CtrlExCodeIn=0
+	F59= CtrlIMMU=0
+	F60= CtrlPC=0
+	F61= CtrlPCInc=0
+	F62= CtrlIAddrReg=0
+	F63= CtrlICache=0
+	F64= CtrlIR=0
+	F65= CtrlICacheReg=0
+	F66= CtrlIMem=0
+	F67= CtrlIRMux=0
+
+MEM	F68= CtrlASIDIn=0
+	F69= CtrlCP0=0
+	F70= CtrlEPCIn=0
+	F71= CtrlExCodeIn=0
+	F72= CtrlIMMU=0
+	F73= CtrlPC=0
+	F74= CtrlPCInc=0
+	F75= CtrlIAddrReg=0
+	F76= CtrlICache=0
+	F77= CtrlIR=0
+	F78= CtrlICacheReg=0
+	F79= CtrlIMem=0
+	F80= CtrlIRMux=0
+
+WB	F107= CtrlASIDIn=0
+	F108= CtrlCP0=0
+	F109= CtrlEPCIn=0
+	F110= CtrlExCodeIn=0
+	F111= CtrlIMMU=0
+	F112= CtrlPC=0
+	F113= CtrlPCInc=0
+	F114= CtrlIAddrReg=0
+	F115= CtrlICache=0
+	F116= CtrlIR=0
+	F117= CtrlICacheReg=0
+	F118= CtrlIMem=0
+	F119= CtrlIRMux=0
+
+POST	F120= PC[Out]={addr[31:28],imm,2'b0}
+

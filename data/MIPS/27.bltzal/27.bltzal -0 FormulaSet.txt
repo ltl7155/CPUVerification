@@ -1,0 +1,103 @@
+
+---------------------------------- Formula Set ----------------------------------
+
+PRE	F0= CP0[ASID]=pid
+	F1= PC[Out]=addr
+	F2= IMem[{pid,addr}]={1,rS,16,offset}
+	F3= GPR[rS]=a
+
+IF	F4= PC.Out=>IMem.RAddr
+	F5= CP0.ASID=>IMem.ASID
+	F6= IMem.Out=>IR.In
+	F7= CtrlPC=0
+	F8= CtrlPCInc=1
+	F9= CtrlIMem=0
+	F10= CtrlASIDIn=0
+	F11= CtrlCP0=0
+	F12= CtrlEPCIn=0
+	F13= CtrlExCodeIn=0
+	F14= CtrlIR=1
+	F15= CtrlGPR=0
+	F16= CtrlA=0
+	F17= CtrlB=0
+	F18= CtrlALUOut=0
+	F19= CtrlConditionReg=0
+
+ID	F20= IR.Out31_26=>CU.Op
+	F21= IR.Out25_21=>GPR.RReg1
+	F22= IR.Out20_16=>GPR.RReg2
+	F23= GPR.Rdata1=>A.In
+	F24= GPR.Rdata2=>B.In
+	F25= CtrlPC=0
+	F26= CtrlPCInc=0
+	F27= CtrlIMem=0
+	F28= CtrlASIDIn=0
+	F29= CtrlCP0=0
+	F30= CtrlEPCIn=0
+	F31= CtrlExCodeIn=0
+	F32= CtrlIR=0
+	F33= CtrlGPR=0
+	F34= CtrlA=1
+	F35= CtrlB=1
+	F36= CtrlALUOut=0
+	F37= CtrlConditionReg=0
+
+EX	F38= IR.Out15_0=>SEXT.In
+	F39= PC.CIA=>ALU.A
+	F40= SEXT.Out=>ALU.B
+	F41= ALU.Func=6'b010010
+	F42= ALU.Out=>ALUOut.In
+	F43= A.Out=>CMPU.A
+	F44= B.Out=>CMPU.B
+	F45= CMPU.Func=6'b000011
+	F46= CMPU.lt=>ConditionReg.In
+	F47= GPR.WReg=5'd31
+	F48= PC.Out=>GPR.WData
+	F49= CtrlPC=0
+	F50= CtrlPCInc=0
+	F51= CtrlIMem=0
+	F52= CtrlASIDIn=0
+	F53= CtrlCP0=0
+	F54= CtrlEPCIn=0
+	F55= CtrlExCodeIn=0
+	F56= CtrlIR=0
+	F57= CtrlGPR=1
+	F58= CtrlA=0
+	F59= CtrlB=0
+	F60= CtrlALUOut=1
+	F61= CtrlConditionReg=1
+
+MEM	F62= ALUOut.Out=>PC.In
+	F63= ConditionReg.Out=>CU.lt
+	F64= CtrlPC=1
+	F65= CtrlPCInc=0
+	F66= CtrlIMem=0
+	F67= CtrlASIDIn=0
+	F68= CtrlCP0=0
+	F69= CtrlEPCIn=0
+	F70= CtrlExCodeIn=0
+	F71= CtrlIR=0
+	F72= CtrlGPR=0
+	F73= CtrlA=0
+	F74= CtrlB=0
+	F75= CtrlALUOut=0
+	F76= CtrlConditionReg=0
+
+WB	F77= CtrlPC=0
+	F78= CtrlPCInc=0
+	F79= CtrlIMem=0
+	F80= CtrlASIDIn=0
+	F81= CtrlCP0=0
+	F82= CtrlEPCIn=0
+	F83= CtrlExCodeIn=0
+	F84= CtrlIR=0
+	F85= CtrlGPR=0
+	F86= CtrlA=0
+	F87= CtrlB=0
+	F88= CtrlALUOut=0
+	F89= CtrlConditionReg=0
+
+POST	F90= PC[Out]=addr+{14{offset[15]},offset,2{0}}
+	F91= [ConditionReg]=CompareS(a,32'b0)
+	F92= GPR[5'd31]=addr+4
+

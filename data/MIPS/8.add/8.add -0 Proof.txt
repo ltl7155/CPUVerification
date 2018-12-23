@@ -1,0 +1,27 @@
+
+------------------------------------- Proof -------------------------------------
+
+PRE	S0= PC[Out]=addr                                            Premise(F1)
+
+IF	S1= CtrlPC=0                                                Premise(F8)
+	S2= CtrlPCInc=1                                             Premise(F9)
+	S3= PC[Out]=addr+4                                          PC-Inc(S0,S1,S2)
+
+ID	S4= CtrlPC=0                                                Premise(F27)
+	S5= CtrlPCInc=0                                             Premise(F28)
+	S6= PC[Out]=addr+4                                          PC-Hold(S3,S4,S5)
+
+EX	S7= CtrlPC=0                                                Premise(F45)
+	S8= CtrlPCInc=0                                             Premise(F46)
+	S9= PC[Out]=addr+4                                          PC-Hold(S6,S7,S8)
+
+MEM	S10= CtrlPC=0                                               Premise(F58)
+	S11= CtrlPCInc=0                                            Premise(F59)
+	S12= PC[Out]=addr+4                                         PC-Hold(S9,S10,S11)
+
+WB	S13= CtrlPC=0                                               Premise(F74)
+	S14= CtrlPCInc=0                                            Premise(F75)
+	S15= PC[Out]=addr+4                                         PC-Hold(S12,S13,S14)
+
+POST	S15= PC[Out]=addr+4                                         PC-Hold(S12,S13,S14)
+

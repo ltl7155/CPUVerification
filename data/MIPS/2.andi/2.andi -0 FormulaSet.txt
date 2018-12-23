@@ -1,0 +1,90 @@
+
+---------------------------------- Formula Set ----------------------------------
+
+PRE	F0= CP0[ASID]=pid
+	F1= PC[Out]=addr
+	F2= IMem[{pid,addr}]={12,rS,rD,UIMM}
+	F3= GPR[rS]=a
+
+IF	F4= PC.Out=>IMem.RAddr
+	F5= CP0.ASID=>IMem.ASID
+	F6= IMem.Out=>IR.In
+	F7= CtrlPC=0
+	F8= CtrlPCInc=1
+	F9= CtrlIMem=0
+	F10= CtrlASIDIn=0
+	F11= CtrlCP0=0
+	F12= CtrlEPCIn=0
+	F13= CtrlExCodeIn=0
+	F14= CtrlIR=1
+	F15= CtrlGPR=0
+	F16= CtrlA=0
+	F17= CtrlB=0
+	F18= CtrlALUOut=0
+
+ID	F19= IR.Out31_26=>CU.Op
+	F20= IR.Out25_21=>GPR.RReg1
+	F21= IR.Out15_0=>LIMMEXT.In
+	F22= GPR.Rdata1=>A.In
+	F23= LIMMEXT.Out=>B.In
+	F24= CtrlPC=0
+	F25= CtrlPCInc=0
+	F26= CtrlIMem=0
+	F27= CtrlASIDIn=0
+	F28= CtrlCP0=0
+	F29= CtrlEPCIn=0
+	F30= CtrlExCodeIn=0
+	F31= CtrlIR=0
+	F32= CtrlGPR=0
+	F33= CtrlA=1
+	F34= CtrlB=1
+	F35= CtrlALUOut=0
+
+EX	F36= A.Out=>ALU.A
+	F37= B.Out=>ALU.B
+	F38= ALU.Func=6'b000000
+	F39= ALU.Out=>ALUOut.In
+	F40= CtrlPC=0
+	F41= CtrlPCInc=0
+	F42= CtrlIMem=0
+	F43= CtrlASIDIn=0
+	F44= CtrlCP0=0
+	F45= CtrlEPCIn=0
+	F46= CtrlExCodeIn=0
+	F47= CtrlIR=0
+	F48= CtrlGPR=0
+	F49= CtrlA=0
+	F50= CtrlB=0
+	F51= CtrlALUOut=1
+
+MEM	F52= CtrlPC=0
+	F53= CtrlPCInc=0
+	F54= CtrlIMem=0
+	F55= CtrlASIDIn=0
+	F56= CtrlCP0=0
+	F57= CtrlEPCIn=0
+	F58= CtrlExCodeIn=0
+	F59= CtrlIR=0
+	F60= CtrlGPR=0
+	F61= CtrlA=0
+	F62= CtrlB=0
+	F63= CtrlALUOut=0
+
+WB	F64= IR.Out20_16=>GPR.WReg
+	F65= ALUOut.Out=>GPR.WData
+	F66= CtrlPC=0
+	F67= CtrlPCInc=0
+	F68= CtrlIMem=0
+	F69= CtrlASIDIn=0
+	F70= CtrlCP0=0
+	F71= CtrlEPCIn=0
+	F72= CtrlExCodeIn=0
+	F73= CtrlIR=0
+	F74= CtrlGPR=1
+	F75= CtrlA=0
+	F76= CtrlB=0
+	F77= CtrlALUOut=0
+
+POST	F78= PC[Out]=addr+4
+	F79= GPR[rD]=a&{16{0},UIMM}
+

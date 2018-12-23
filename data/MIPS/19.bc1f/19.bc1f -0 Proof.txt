@@ -1,0 +1,57 @@
+
+------------------------------------- Proof -------------------------------------
+
+PRE	S0= CP0[ASID]=pid                                           Premise(F0)
+	S1= PC[Out]=addr                                            Premise(F1)
+	S2= IMem[{pid,addr}]={17,8,cc,0,0,offset}                   Premise(F2)
+
+IF	S3= CP0.ASID=pid                                            CP0-Read-ASID(S0)
+	S4= PC.Out=addr                                             PC-Out(S1)
+	S5= PC.Out=>IMem.RAddr                                      Premise(F3)
+	S6= IMem.RAddr=addr                                         Path(S4,S5)
+	S7= CP0.ASID=>IMem.ASID                                     Premise(F4)
+	S8= IMem.ASID=pid                                           Path(S3,S7)
+	S9= IMem.Out={17,8,cc,0,0,offset}                           IMem-Read(S8,S6,S2)
+	S10= IMem.Out=>IR.In                                        Premise(F5)
+	S11= IR.In={17,8,cc,0,0,offset}                             Path(S9,S10)
+	S12= CtrlPC=0                                               Premise(F6)
+	S13= CtrlPCInc=1                                            Premise(F7)
+	S14= PC[CIA]=addr                                           PC-Inc(S1,S12,S13)
+	S15= CtrlIR=1                                               Premise(F13)
+	S16= [IR]={17,8,cc,0,0,offset}                              IR-Write(S11,S15)
+
+ID	S17= IR.Out15_0=offset                                      IR-Out(S16)
+	S18= IR.Out15_0=>SEXT.In                                    Premise(F20)
+	S19= SEXT.In=offset                                         Path(S17,S18)
+	S20= SEXT.Out={14{offset[15]},offset,2{0}}                  SEXT(S19)
+	S21= SEXT.Out=>B.In                                         Premise(F21)
+	S22= B.In={14{offset[15]},offset,2{0}}                      Path(S20,S21)
+	S23= CtrlPCInc=0                                            Premise(F23)
+	S24= PC[CIA]=addr                                           PC-Hold(S14,S23)
+	S25= CtrlB=1                                                Premise(F30)
+	S26= [B]={14{offset[15]},offset,2{0}}                       B-Write(S22,S25)
+
+EX	S27= PC.CIA=addr                                            PC-Out(S24)
+	S28= B.Out={14{offset[15]},offset,2{0}}                     B-Out(S26)
+	S29= PC.CIA=>ALU.A                                          Premise(F34)
+	S30= ALU.A=addr                                             Path(S27,S29)
+	S31= B.Out=>ALU.B                                           Premise(F35)
+	S32= ALU.B={14{offset[15]},offset,2{0}}                     Path(S28,S31)
+	S33= ALU.Out=addr+{14{offset[15]},offset,2{0}}              ALU(S30,S32)
+	S34= ALU.Out=>ALUOut.In                                     Premise(F37)
+	S35= ALUOut.In=addr+{14{offset[15]},offset,2{0}}            Path(S33,S34)
+	S36= CtrlALUOut=1                                           Premise(F47)
+	S37= [ALUOut]=addr+{14{offset[15]},offset,2{0}}             ALUOut-Write(S35,S36)
+
+MEM	S38= CtrlALUOut=0                                           Premise(F62)
+	S39= [ALUOut]=addr+{14{offset[15]},offset,2{0}}             ALUOut-Hold(S37,S38)
+
+WB	S40= ALUOut.Out=addr+{14{offset[15]},offset,2{0}}           ALUOut-Out(S39)
+	S41= ALUOut.Out=>PC.In                                      Premise(F65)
+	S42= PC.In=addr+{14{offset[15]},offset,2{0}}                Path(S40,S41)
+	S43= CtrlPC=1                                               Premise(F67)
+	S44= CtrlPCInc=0                                            Premise(F68)
+	S45= PC[Out]=addr+{14{offset[15]},offset,2{0}}              PC-Write(S42,S43,S44)
+
+POST	S45= PC[Out]=addr+{14{offset[15]},offset,2{0}}              PC-Write(S42,S43,S44)
+

@@ -1,0 +1,99 @@
+
+---------------------------------- Formula Set ----------------------------------
+
+PRE	F0= CP0[ASID]=pid
+	F1= PC[Out]=addr
+	F2= IMem[{pid,addr}]={0,rs,rt,code,54}
+	F3= GPR[rs]=a
+	F4= GPR[rt]=b
+
+IF	F5= PC.Out=>IMem.RAddr
+	F6= CP0.ASID=>IMem.ASID
+	F7= IMem.Out=>IR.In
+	F8= CtrlPC=0
+	F9= CtrlPCInc=1
+	F10= CtrlIMem=0
+	F11= CtrlASIDIn=0
+	F12= CtrlCP0=0
+	F13= CtrlEPCIn=0
+	F14= CtrlExCodeIn=0
+	F15= CtrlIR=1
+	F16= CtrlGPR=0
+	F17= CtrlA=0
+	F18= CtrlB=0
+	F19= CtrlConditionReg=0
+	F20= CtrlPIDReg=0
+
+ID	F21= IR.Out31_26=>CU.Op
+	F22= IR.Out25_21=>GPR.RReg1
+	F23= IR.Out20_16=>GPR.RReg2
+	F24= IR.Out5_0=>CU.IRFunc
+	F25= GPR.Rdata1=>A.In
+	F26= GPR.Rdata2=>B.In
+	F27= CtrlPC=0
+	F28= CtrlPCInc=0
+	F29= CtrlIMem=0
+	F30= CtrlASIDIn=0
+	F31= CtrlCP0=0
+	F32= CtrlEPCIn=0
+	F33= CtrlExCodeIn=0
+	F34= CtrlIR=0
+	F35= CtrlGPR=0
+	F36= CtrlA=1
+	F37= CtrlB=1
+	F38= CtrlConditionReg=0
+	F39= CtrlPIDReg=0
+
+EX	F40= A.Out=>CMPU.A
+	F41= B.Out=>CMPU.B
+	F42= CMPU.Func=6'b000011
+	F43= CMPU.zero=>ConditionReg.In
+	F44= CtrlPC=0
+	F45= CtrlPCInc=0
+	F46= CtrlIMem=0
+	F47= CtrlASIDIn=0
+	F48= CtrlCP0=0
+	F49= CtrlEPCIn=0
+	F50= CtrlExCodeIn=0
+	F51= CtrlIR=0
+	F52= CtrlGPR=0
+	F53= CtrlA=0
+	F54= CtrlB=0
+	F55= CtrlConditionReg=1
+	F56= CtrlPIDReg=0
+
+MEM	F57= PC.Out=>CP0.EPCIn
+	F58= CP0.ExCodeIn=5'h0d
+	F59= CU.TrapAddr=>PC.In
+	F60= CP0.ASID=>PIDReg.In
+	F61= ConditionReg.Out=>CU.zero
+	F62= CtrlPC=0
+	F63= CtrlPCInc=0
+	F64= CtrlIMem=0
+	F65= CtrlASIDIn=0
+	F66= CtrlCP0=0
+	F67= CtrlEPCIn=0
+	F68= CtrlExCodeIn=0
+	F69= CtrlIR=0
+	F70= CtrlGPR=0
+	F71= CtrlA=0
+	F72= CtrlB=0
+	F73= CtrlConditionReg=0
+	F74= CtrlPIDReg=0
+
+WB	F75= CtrlPC=0
+	F76= CtrlPCInc=0
+	F77= CtrlIMem=0
+	F78= CtrlASIDIn=0
+	F79= CtrlCP0=0
+	F80= CtrlEPCIn=0
+	F81= CtrlExCodeIn=0
+	F82= CtrlIR=0
+	F83= CtrlGPR=0
+	F84= CtrlA=0
+	F85= CtrlB=0
+	F86= CtrlConditionReg=0
+	F87= CtrlPIDReg=0
+
+POST	F88= [ConditionReg]=CompareS(a,b)
+

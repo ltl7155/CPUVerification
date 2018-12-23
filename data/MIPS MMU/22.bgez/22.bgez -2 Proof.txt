@@ -1,0 +1,52 @@
+
+------------------------------------- Proof -------------------------------------
+
+PRE	S0= PC[Out]=addr                                            Premise(F1)
+	S1= ICache[addr]={1,rS,1,offset}                            Premise(F3)
+	S2= GPR[rS]=a                                               Premise(F4)
+
+IF	S3= PC.Out=addr                                             PC-Out(S0)
+	S4= PC.Out=>ICache.IEA                                      Premise(F9)
+	S5= ICache.IEA=addr                                         Path(S3,S4)
+	S6= ICache.Out={1,rS,1,offset}                              ICache-Search(S5,S1)
+	S7= ICache.Out=>IR.In                                       Premise(F10)
+	S8= IR.In={1,rS,1,offset}                                   Path(S6,S7)
+	S9= CtrlIR=1                                                Premise(F22)
+	S10= [IR]={1,rS,1,offset}                                   IR-Write(S8,S9)
+	S11= CtrlGPR=0                                              Premise(F26)
+	S12= GPR[rS]=a                                              GPR-Hold(S2,S11)
+
+ID	S13= IR.Out25_21=rS                                         IR-Out(S10)
+	S14= IR.Out25_21=>GPR.RReg1                                 Premise(F50)
+	S15= GPR.RReg1=rS                                           Path(S13,S14)
+	S16= GPR.Rdata1=a                                           GPR-Read(S15,S12)
+	S17= GPR.Rdata2=32'b0                                       GPR-ReadGPR0()
+	S18= GPR.Rdata1=>A.In                                       Premise(F52)
+	S19= A.In=a                                                 Path(S16,S18)
+	S20= GPR.Rdata2=>B.In                                       Premise(F53)
+	S21= B.In=32'b0                                             Path(S17,S20)
+	S22= CtrlA=1                                                Premise(F68)
+	S23= [A]=a                                                  A-Write(S19,S22)
+	S24= CtrlB=1                                                Premise(F69)
+	S25= [B]=32'b0                                              B-Write(S21,S24)
+
+EX	S26= A.Out=a                                                A-Out(S23)
+	S27= B.Out=32'b0                                            B-Out(S25)
+	S28= A.Out=>CMPU.A                                          Premise(F77)
+	S29= CMPU.A=a                                               Path(S26,S28)
+	S30= B.Out=>CMPU.B                                          Premise(F78)
+	S31= CMPU.B=32'b0                                           Path(S27,S30)
+	S32= CMPU.lt=CompareS(a,32'b0)                              CMPU-CMPS(S29,S31)
+	S33= CMPU.lt=>ConditionReg.In                               Premise(F80)
+	S34= ConditionReg.In=CompareS(a,32'b0)                      Path(S32,S33)
+	S35= CtrlConditionReg=1                                     Premise(F98)
+	S36= [ConditionReg]=CompareS(a,32'b0)                       ConditionReg-Write(S34,S35)
+
+MEM	S37= CtrlConditionReg=0                                     Premise(F118)
+	S38= [ConditionReg]=CompareS(a,32'b0)                       ConditionReg-Hold(S36,S37)
+
+WB	S39= CtrlConditionReg=0                                     Premise(F172)
+	S40= [ConditionReg]=CompareS(a,32'b0)                       ConditionReg-Hold(S38,S39)
+
+POST	S40= [ConditionReg]=CompareS(a,32'b0)                       ConditionReg-Hold(S38,S39)
+

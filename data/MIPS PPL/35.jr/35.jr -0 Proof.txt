@@ -1,0 +1,47 @@
+
+------------------------------------- Proof -------------------------------------
+
+PRE	S0= CP0[ASID]=pid                                           Premise(F0)
+	S1= PC[Out]=addr                                            Premise(F1)
+	S2= IMem[{pid,addr}]={0,rS,0,0,hint,8}                      Premise(F2)
+
+IF	S3= CP0.ASID=pid                                            CP0-Read-ASID(S0)
+	S4= PC.Out=addr                                             PC-Out(S1)
+	S5= PC.Out=>IMem.RAddr                                      Premise(F3)
+	S6= IMem.RAddr=addr                                         Path(S4,S5)
+	S7= CP0.ASID=>IMem.ASID                                     Premise(F4)
+	S8= IMem.ASID=pid                                           Path(S3,S7)
+	S9= IMem.Out={0,rS,0,0,hint,8}                              IMem-Read(S8,S6,S2)
+	S10= IMem.Out=>IR_ID.In                                     Premise(F6)
+	S11= IR_ID.In={0,rS,0,0,hint,8}                             Path(S9,S10)
+	S12= CtrlIR_ID=1                                            Premise(F37)
+	S13= [IR_ID]={0,rS,0,0,hint,8}                              IR_ID-Write(S11,S12)
+	S14= GPR[rS]=a                                              Premise(F42)
+
+ID	S15= IR_ID.Out25_21=rS                                      IR-Out(S13)
+	S16= IR_ID.Out25_21=>GPR.RReg1                              Premise(F51)
+	S17= GPR.RReg1=rS                                           Path(S15,S16)
+	S18= GPR.Rdata1=a                                           GPR-Read(S17,S14)
+	S19= GPR.Rdata1=>FU.InID1                                   Premise(F53)
+	S20= FU.InID1=a                                             Path(S18,S19)
+	S21= FU.OutID1=FU(a)                                        FU-Forward(S20)
+	S22= FU.OutID1=>PC.In                                       Premise(F55)
+	S23= PC.In=FU(a)                                            Path(S21,S22)
+	S24= CtrlPC=1                                               Premise(F71)
+	S25= CtrlPCInc=0                                            Premise(F72)
+	S26= PC[Out]=FU(a)                                          PC-Write(S23,S24,S25)
+
+EX	S27= CtrlPC=0                                               Premise(F111)
+	S28= CtrlPCInc=0                                            Premise(F112)
+	S29= PC[Out]=FU(a)                                          PC-Hold(S26,S27,S28)
+
+MEM	S30= CtrlPC=0                                               Premise(F151)
+	S31= CtrlPCInc=0                                            Premise(F152)
+	S32= PC[Out]=FU(a)                                          PC-Hold(S29,S30,S31)
+
+WB	S33= CtrlPC=0                                               Premise(F191)
+	S34= CtrlPCInc=0                                            Premise(F192)
+	S35= PC[Out]=FU(a)                                          PC-Hold(S32,S33,S34)
+
+POST	S35= PC[Out]=FU(a)                                          PC-Hold(S32,S33,S34)
+

@@ -1,0 +1,66 @@
+
+------------------------------------- Proof -------------------------------------
+
+PRE	S0= PC[Out]=addr                                            Premise(F1)
+	S1= ICache[addr]={15,0,rT,offset}                           Premise(F3)
+
+IF	S2= PC.Out=addr                                             PC-Out(S0)
+	S3= PC.Out=>ICache.IEA                                      Premise(F8)
+	S4= ICache.IEA=addr                                         Path(S2,S3)
+	S5= ICache.Out={15,0,rT,offset}                             ICache-Search(S4,S1)
+	S6= ICache.Out=>IR_ID.In                                    Premise(F12)
+	S7= IR_ID.In={15,0,rT,offset}                               Path(S5,S6)
+	S8= CtrlPC=0                                                Premise(F25)
+	S9= CtrlPCInc=1                                             Premise(F26)
+	S10= PC[Out]=addr+4                                         PC-Inc(S0,S8,S9)
+	S11= CtrlIR_ID=1                                            Premise(F31)
+	S12= [IR_ID]={15,0,rT,offset}                               IR_ID-Write(S7,S11)
+
+ID	S13= IR_ID.Out20_16=rT                                      IR-Out(S12)
+	S14= IR_ID.Out15_0=offset                                   IR-Out(S12)
+	S15= IR_ID.Out15_0=>IMMSEXT.In                              Premise(F64)
+	S16= IMMSEXT.In=offset                                      Path(S14,S15)
+	S17= IMMSEXT.Out={offset,16{0}}                             IMMSEXT(S16)
+	S18= IMMSEXT.Out=>GPR.WData                                 Premise(F65)
+	S19= GPR.WData={offset,16{0}}                               Path(S17,S18)
+	S20= IR_ID.Out20_16=>GPR.WReg                               Premise(F66)
+	S21= GPR.WReg=rT                                            Path(S13,S20)
+	S22= CtrlPC=0                                               Premise(F77)
+	S23= CtrlPCInc=0                                            Premise(F78)
+	S24= PC[Out]=addr+4                                         PC-Hold(S10,S22,S23)
+	S25= CtrlGPR=1                                              Premise(F86)
+	S26= GPR[rT]={offset,16{0}}                                 GPR-Write(S21,S19,S25)
+
+EX	S27= CtrlPC=0                                               Premise(F103)
+	S28= CtrlPCInc=0                                            Premise(F104)
+	S29= PC[Out]=addr+4                                         PC-Hold(S24,S27,S28)
+	S30= CtrlGPR=0                                              Premise(F112)
+	S31= GPR[rT]={offset,16{0}}                                 GPR-Hold(S26,S30)
+
+MEM	S32= CtrlPC=0                                               Premise(F134)
+	S33= CtrlPCInc=0                                            Premise(F135)
+	S34= PC[Out]=addr+4                                         PC-Hold(S29,S32,S33)
+	S35= CtrlGPR=0                                              Premise(F143)
+	S36= GPR[rT]={offset,16{0}}                                 GPR-Hold(S31,S35)
+
+MEM(DMMU1)	S37= CtrlPC=0                                               Premise(F163)
+	S38= CtrlPCInc=0                                            Premise(F164)
+	S39= PC[Out]=addr+4                                         PC-Hold(S34,S37,S38)
+	S40= CtrlGPR=0                                              Premise(F172)
+	S41= GPR[rT]={offset,16{0}}                                 GPR-Hold(S36,S40)
+
+MEM(DMMU2)	S42= CtrlPC=0                                               Premise(F189)
+	S43= CtrlPCInc=0                                            Premise(F190)
+	S44= PC[Out]=addr+4                                         PC-Hold(S39,S42,S43)
+	S45= CtrlGPR=0                                              Premise(F198)
+	S46= GPR[rT]={offset,16{0}}                                 GPR-Hold(S41,S45)
+
+WB	S47= CtrlPC=0                                               Premise(F212)
+	S48= CtrlPCInc=0                                            Premise(F213)
+	S49= PC[Out]=addr+4                                         PC-Hold(S44,S47,S48)
+	S50= CtrlGPR=0                                              Premise(F221)
+	S51= GPR[rT]={offset,16{0}}                                 GPR-Hold(S46,S50)
+
+POST	S49= PC[Out]=addr+4                                         PC-Hold(S44,S47,S48)
+	S51= GPR[rT]={offset,16{0}}                                 GPR-Hold(S46,S50)
+

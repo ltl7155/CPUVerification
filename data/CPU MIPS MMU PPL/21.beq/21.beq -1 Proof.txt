@@ -1,0 +1,50 @@
+
+------------------------------------- Proof -------------------------------------
+
+PRE	S0= CP0[ASID]=pid                                           Premise(F0)
+	S1= PC[Out]=addr                                            Premise(F1)
+	S2= IMem[{pid,addr}]={4,rS,rT,offset}                       Premise(F2)
+
+IF	S3= CP0.ASID=pid                                            CP0-Read-ASID(S0)
+	S4= PC.Out=addr                                             PC-Out(S1)
+	S5= IMMU.Addr=>IAddrReg.In                                  Premise(F61)
+	S6= PC.Out=>IMMU.IEA                                        Premise(F66)
+	S7= IMMU.IEA=addr                                           Path(S4,S6)
+	S8= CP0.ASID=>IMMU.PID                                      Premise(F67)
+	S9= IMMU.PID=pid                                            Path(S3,S8)
+	S10= IMMU.Addr={pid,addr}                                   IMMU-Search(S9,S7)
+	S11= IAddrReg.In={pid,addr}                                 Path(S10,S5)
+	S12= CtrlPC=0                                               Premise(F108)
+	S13= CtrlPCInc=0                                            Premise(F109)
+	S14= PC[Out]=addr                                           PC-Hold(S1,S12,S13)
+	S15= CtrlIAddrReg=1                                         Premise(F130)
+	S16= [IAddrReg]={pid,addr}                                  IAddrReg-Write(S11,S15)
+	S17= CtrlIMem=0                                             Premise(F131)
+	S18= IMem[{pid,addr}]={4,rS,rT,offset}                      IMem-Hold(S2,S17)
+
+IMMU	S19= PC.Out=addr                                            PC-Out(S14)
+	S20= IAddrReg.Out={pid,addr}                                IAddrReg-Out(S16)
+	S21= PC.Out=>ICache.IEA                                     Premise(F199)
+	S22= ICache.IEA=addr                                        Path(S19,S21)
+	S23= IMem.MEM8WordOut=>ICache.WData                         Premise(F201)
+	S24= IAddrReg.Out=>IMem.RAddr                               Premise(F205)
+	S25= IMem.RAddr={pid,addr}                                  Path(S20,S24)
+	S26= IMem.MEM8WordOut=IMemGet8Word({pid,addr})              IMem-Read(S25,S18)
+	S27= ICache.WData=IMemGet8Word({pid,addr})                  Path(S26,S23)
+	S28= CtrlICache=1                                           Premise(F255)
+	S29= ICache[line_addr]=IMemGet8Word({pid,addr})             ICache-Write(S22,S27,S28)
+
+ID	S30= CtrlICache=0                                           Premise(F390)
+	S31= ICache[line_addr]=IMemGet8Word({pid,addr})             ICache-Hold(S29,S30)
+
+EX	S32= CtrlICache=0                                           Premise(F528)
+	S33= ICache[line_addr]=IMemGet8Word({pid,addr})             ICache-Hold(S31,S32)
+
+MEM	S34= CtrlICache=0                                           Premise(F664)
+	S35= ICache[line_addr]=IMemGet8Word({pid,addr})             ICache-Hold(S33,S34)
+
+WB	S36= CtrlICache=0                                           Premise(F1072)
+	S37= ICache[line_addr]=IMemGet8Word({pid,addr})             ICache-Hold(S35,S36)
+
+POST	S37= ICache[line_addr]=IMemGet8Word({pid,addr})             ICache-Hold(S35,S36)
+

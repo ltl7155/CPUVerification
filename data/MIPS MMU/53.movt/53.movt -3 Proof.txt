@@ -1,0 +1,66 @@
+
+------------------------------------- Proof -------------------------------------
+
+PRE	S0= PC[Out]=addr                                            Premise(F1)
+	S1= ICache[addr]={0,rS,cc,0,1,rD,0,1}                       Premise(F3)
+
+IF	S2= PC.Out=addr                                             PC-Out(S0)
+	S3= PC.Out=>ICache.IEA                                      Premise(F9)
+	S4= ICache.IEA=addr                                         Path(S2,S3)
+	S5= ICache.Out={0,rS,cc,0,1,rD,0,1}                         ICache-Search(S4,S1)
+	S6= ICache.Out=>IR.In                                       Premise(F10)
+	S7= IR.In={0,rS,cc,0,1,rD,0,1}                              Path(S5,S6)
+	S8= CtrlPC=0                                                Premise(F18)
+	S9= CtrlPCInc=1                                             Premise(F19)
+	S10= PC[Out]=addr+4                                         PC-Inc(S0,S8,S9)
+	S11= CtrlIR=1                                               Premise(F22)
+	S12= [IR]={0,rS,cc,0,1,rD,0,1}                              IR-Write(S7,S11)
+
+ID	S13= CtrlPC=0                                               Premise(F56)
+	S14= CtrlPCInc=0                                            Premise(F57)
+	S15= PC[Out]=addr+4                                         PC-Hold(S10,S13,S14)
+	S16= CtrlIR=0                                               Premise(F60)
+	S17= [IR]={0,rS,cc,0,1,rD,0,1}                              IR-Hold(S12,S16)
+
+EX	S18= IR.Out20_18=cc                                         IR-Out(S17)
+	S19= IR.Out16=1                                             IR-Out(S17)
+	S20= IR.Out20_18=>CP1.cc                                    Premise(F68)
+	S21= CP1.cc=cc                                              Path(S18,S20)
+	S22= IR.Out16=>CP1.tf                                       Premise(F69)
+	S23= CP1.tf=1                                               Path(S19,S22)
+	S24= CP1.fp=FPConditionCode(cc,1)                           FP-PRODUCT(S21,S23)
+	S25= CP1.fp=>ConditionReg.In                                Premise(F70)
+	S26= ConditionReg.In=FPConditionCode(cc,1)                  Path(S24,S25)
+	S27= CtrlPC=0                                               Premise(F76)
+	S28= CtrlPCInc=0                                            Premise(F77)
+	S29= PC[Out]=addr+4                                         PC-Hold(S15,S27,S28)
+	S30= CtrlConditionReg=1                                     Premise(F87)
+	S31= [ConditionReg]=FPConditionCode(cc,1)                   ConditionReg-Write(S26,S30)
+
+MEM	S32= CtrlPC=0                                               Premise(F93)
+	S33= CtrlPCInc=0                                            Premise(F94)
+	S34= PC[Out]=addr+4                                         PC-Hold(S29,S32,S33)
+	S35= CtrlConditionReg=0                                     Premise(F104)
+	S36= [ConditionReg]=FPConditionCode(cc,1)                   ConditionReg-Hold(S31,S35)
+
+MEM(DMMU1)	S37= CtrlPC=0                                               Premise(F110)
+	S38= CtrlPCInc=0                                            Premise(F111)
+	S39= PC[Out]=addr+4                                         PC-Hold(S34,S37,S38)
+	S40= CtrlConditionReg=0                                     Premise(F121)
+	S41= [ConditionReg]=FPConditionCode(cc,1)                   ConditionReg-Hold(S36,S40)
+
+MEM(DMMU2)	S42= CtrlPC=0                                               Premise(F127)
+	S43= CtrlPCInc=0                                            Premise(F128)
+	S44= PC[Out]=addr+4                                         PC-Hold(S39,S42,S43)
+	S45= CtrlConditionReg=0                                     Premise(F138)
+	S46= [ConditionReg]=FPConditionCode(cc,1)                   ConditionReg-Hold(S41,S45)
+
+WB	S47= CtrlPC=0                                               Premise(F147)
+	S48= CtrlPCInc=0                                            Premise(F148)
+	S49= PC[Out]=addr+4                                         PC-Hold(S44,S47,S48)
+	S50= CtrlConditionReg=0                                     Premise(F158)
+	S51= [ConditionReg]=FPConditionCode(cc,1)                   ConditionReg-Hold(S46,S50)
+
+POST	S49= PC[Out]=addr+4                                         PC-Hold(S44,S47,S48)
+	S51= [ConditionReg]=FPConditionCode(cc,1)                   ConditionReg-Hold(S46,S50)
+

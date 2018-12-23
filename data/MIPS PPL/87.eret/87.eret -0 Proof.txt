@@ -1,0 +1,41 @@
+
+------------------------------------- Proof -------------------------------------
+
+PRE	S0= CP0[EPC]=epc                                            Premise(F3)
+	S1= [PIDReg]=a                                              Premise(F4)
+
+IF	S2= CtrlCP0=0                                               Premise(F34)
+	S3= CP0[EPC]=epc                                            CP0-Hold(S0,S2)
+	S4= CtrlPIDReg=0                                            Premise(F41)
+	S5= [PIDReg]=a                                              PIDReg-Hold(S1,S4)
+
+ID	S6= CtrlCP0=0                                               Premise(F73)
+	S7= CP0[EPC]=epc                                            CP0-Hold(S3,S6)
+	S8= CtrlPIDReg=0                                            Premise(F80)
+	S9= [PIDReg]=a                                              PIDReg-Hold(S5,S8)
+
+EX	S10= CtrlCP0=0                                              Premise(F111)
+	S11= CP0[EPC]=epc                                           CP0-Hold(S7,S10)
+	S12= CtrlPIDReg=0                                           Premise(F118)
+	S13= [PIDReg]=a                                             PIDReg-Hold(S9,S12)
+
+MEM	S14= CtrlCP0=0                                              Premise(F149)
+	S15= CP0[EPC]=epc                                           CP0-Hold(S11,S14)
+	S16= CtrlPIDReg=0                                           Premise(F156)
+	S17= [PIDReg]=a                                             PIDReg-Hold(S13,S16)
+
+WB	S18= CP0.EPC=epc                                            CP0-Read-EPC(S15)
+	S19= PIDReg.Out=a                                           PIDReg-Out(S17)
+	S20= PIDReg.Out=>CP0.ASIDIn                                 Premise(F180)
+	S21= CP0.ASIDIn=a                                           Path(S19,S20)
+	S22= CP0.EPC=>PC.In                                         Premise(F181)
+	S23= PC.In=epc                                              Path(S18,S22)
+	S24= CtrlPC=1                                               Premise(F183)
+	S25= CtrlPCInc=0                                            Premise(F184)
+	S26= PC[Out]=epc                                            PC-Write(S23,S24,S25)
+	S27= CtrlASIDIn=1                                           Premise(F186)
+	S28= CP0[ASID]=a                                            CP0-Write-ASID(S21,S27)
+
+POST	S26= PC[Out]=epc                                            PC-Write(S23,S24,S25)
+	S28= CP0[ASID]=a                                            CP0-Write-ASID(S21,S27)
+

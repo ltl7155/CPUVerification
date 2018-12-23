@@ -1,0 +1,60 @@
+
+------------------------------------- Proof -------------------------------------
+
+PRE	S0= CP0[ASID]=pid                                           Premise(F0)
+	S1= PC[Out]=addr                                            Premise(F1)
+
+IF	S2= CtrlCP0=0                                               Premise(F13)
+	S3= CP0[ASID]=pid                                           CP0-Hold(S0,S2)
+	S4= CtrlPC=0                                                Premise(F17)
+	S5= CtrlPCInc=1                                             Premise(F18)
+	S6= PC[Out]=addr+4                                          PC-Inc(S1,S4,S5)
+
+ID	S7= CP0.ASID=pid                                            CP0-Read-ASID(S3)
+	S8= PC.Out=addr+4                                           PC-Out(S6)
+	S9= PC.Out=>CP0.EPCIn                                       Premise(F42)
+	S10= CP0.EPCIn=addr+4                                       Path(S8,S9)
+	S11= CP0.ExCodeIn=5'h08                                     Premise(F43)
+	S12= CP0.ASID=>PIDReg.In                                    Premise(F45)
+	S13= PIDReg.In=pid                                          Path(S7,S12)
+	S14= CtrlEPCIn=1                                            Premise(F48)
+	S15= CP0[EPC]=addr+4                                        CP0-Write-EPC(S10,S14)
+	S16= CtrlExCodeIn=1                                         Premise(F49)
+	S17= CP0[ExCode]=5'h08                                      CP0-Write-ExCode(S11,S16)
+	S18= CtrlPIDReg=1                                           Premise(F59)
+	S19= [PIDReg]=pid                                           PIDReg-Write(S13,S18)
+
+EX	S20= CtrlCP0=0                                              Premise(F61)
+	S21= CP0[EPC]=addr+4                                        CP0-Hold(S15,S20)
+	S22= CP0[ExCode]=5'h08                                      CP0-Hold(S17,S20)
+	S23= CtrlPIDReg=0                                           Premise(F73)
+	S24= [PIDReg]=pid                                           PIDReg-Hold(S19,S23)
+
+MEM	S25= CtrlCP0=0                                              Premise(F75)
+	S26= CP0[EPC]=addr+4                                        CP0-Hold(S21,S25)
+	S27= CP0[ExCode]=5'h08                                      CP0-Hold(S22,S25)
+	S28= CtrlPIDReg=0                                           Premise(F87)
+	S29= [PIDReg]=pid                                           PIDReg-Hold(S24,S28)
+
+MEM(DMMU1)	S30= CtrlCP0=0                                              Premise(F89)
+	S31= CP0[EPC]=addr+4                                        CP0-Hold(S26,S30)
+	S32= CP0[ExCode]=5'h08                                      CP0-Hold(S27,S30)
+	S33= CtrlPIDReg=0                                           Premise(F101)
+	S34= [PIDReg]=pid                                           PIDReg-Hold(S29,S33)
+
+MEM(DMMU2)	S35= CtrlCP0=0                                              Premise(F103)
+	S36= CP0[EPC]=addr+4                                        CP0-Hold(S31,S35)
+	S37= CP0[ExCode]=5'h08                                      CP0-Hold(S32,S35)
+	S38= CtrlPIDReg=0                                           Premise(F115)
+	S39= [PIDReg]=pid                                           PIDReg-Hold(S34,S38)
+
+WB	S40= CtrlCP0=0                                              Premise(F117)
+	S41= CP0[EPC]=addr+4                                        CP0-Hold(S36,S40)
+	S42= CP0[ExCode]=5'h08                                      CP0-Hold(S37,S40)
+	S43= CtrlPIDReg=0                                           Premise(F129)
+	S44= [PIDReg]=pid                                           PIDReg-Hold(S39,S43)
+
+POST	S41= CP0[EPC]=addr+4                                        CP0-Hold(S36,S40)
+	S42= CP0[ExCode]=5'h08                                      CP0-Hold(S37,S40)
+	S44= [PIDReg]=pid                                           PIDReg-Hold(S39,S43)
+

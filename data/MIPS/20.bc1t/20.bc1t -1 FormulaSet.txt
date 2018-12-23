@@ -1,0 +1,89 @@
+
+---------------------------------- Formula Set ----------------------------------
+
+PRE	F0= CP0[ASID]=pid
+	F1= PC[Out]=addr
+	F2= IMem[{pid,addr}]={17,8,cc,0,1,offset}
+
+IF	F3= PC.Out=>IMem.RAddr
+	F4= CP0.ASID=>IMem.ASID
+	F5= IMem.Out=>IR.In
+	F6= CtrlPC=0
+	F7= CtrlPCInc=1
+	F8= CtrlIMem=0
+	F9= CtrlASIDIn=0
+	F10= CtrlCP0=0
+	F11= CtrlEPCIn=0
+	F12= CtrlExCodeIn=0
+	F13= CtrlIR=1
+	F14= CtrlB=0
+	F15= CtrlALUOut=0
+	F16= CtrlCP1=0
+	F17= CtrlConditionReg=0
+
+ID	F18= IR.Out31_26=>CU.Op
+	F19= IR.Out25_21=>CU.IRFunc2
+	F20= IR.Out15_0=>SEXT.In
+	F21= SEXT.Out=>B.In
+	F22= CtrlPC=0
+	F23= CtrlPCInc=0
+	F24= CtrlIMem=0
+	F25= CtrlASIDIn=0
+	F26= CtrlCP0=0
+	F27= CtrlEPCIn=0
+	F28= CtrlExCodeIn=0
+	F29= CtrlIR=0
+	F30= CtrlB=1
+	F31= CtrlALUOut=0
+	F32= CtrlCP1=0
+	F33= CtrlConditionReg=0
+
+EX	F34= PC.CIA=>ALU.A
+	F35= B.Out=>ALU.B
+	F36= ALU.Func=6'b010010
+	F37= ALU.Out=>ALUOut.In
+	F38= CtrlPC=0
+	F39= CtrlPCInc=0
+	F40= CtrlIMem=0
+	F41= CtrlASIDIn=0
+	F42= CtrlCP0=0
+	F43= CtrlEPCIn=0
+	F44= CtrlExCodeIn=0
+	F45= CtrlIR=0
+	F46= CtrlB=0
+	F47= CtrlALUOut=1
+	F48= CtrlCP1=0
+	F49= CtrlConditionReg=0
+
+MEM	F50= IR.Out20_18=>CP1.cc
+	F51= IR.Out16=>CP1.tf
+	F52= CP1.fp=>ConditionReg.In
+	F53= CtrlPC=0
+	F54= CtrlPCInc=0
+	F55= CtrlIMem=0
+	F56= CtrlASIDIn=0
+	F57= CtrlCP0=0
+	F58= CtrlEPCIn=0
+	F59= CtrlExCodeIn=0
+	F60= CtrlIR=0
+	F61= CtrlB=0
+	F62= CtrlALUOut=0
+	F63= CtrlCP1=0
+	F64= CtrlConditionReg=1
+
+WB	F65= ALUOut.Out=>PC.In
+	F66= ConditionReg.Out=>CU.fp
+	F67= CtrlPC=0
+	F68= CtrlPCInc=0
+	F69= CtrlIMem=0
+	F70= CtrlASIDIn=0
+	F71= CtrlCP0=0
+	F72= CtrlEPCIn=0
+	F73= CtrlExCodeIn=0
+	F74= CtrlIR=0
+	F75= CtrlB=0
+	F76= CtrlALUOut=0
+	F77= CtrlCP1=0
+	F78= CtrlConditionReg=0
+
+POST

@@ -1,0 +1,61 @@
+
+---------------------------------- Formula Set ----------------------------------
+
+PRE	F0= CP0[ASID]=pid
+	F1= PC[Out]=addr
+	F2= IMem[{pid,addr}]={2,imm}
+
+IF	F3= PC.Out=>IMem.RAddr
+	F4= CP0.ASID=>IMem.ASID
+	F5= IMem.Out=>IR.In
+	F6= CtrlPC=0
+	F7= CtrlPCInc=1
+	F8= CtrlIMem=0
+	F9= CtrlASIDIn=0
+	F10= CtrlCP0=0
+	F11= CtrlEPCIn=0
+	F12= CtrlExCodeIn=0
+	F13= CtrlIR=1
+
+ID	F14= IR.Out31_26=>CU.Op
+	F15= PC.CIA31_28=>ADDREXT.PCpart
+	F16= IR.Out25_0=>ADDREXT.In
+	F17= ADDREXT.Out=>PC.In
+	F18= CtrlPC=1
+	F19= CtrlPCInc=0
+	F20= CtrlIMem=0
+	F21= CtrlASIDIn=0
+	F22= CtrlCP0=0
+	F23= CtrlEPCIn=0
+	F24= CtrlExCodeIn=0
+	F25= CtrlIR=0
+
+EX	F26= CtrlPC=0
+	F27= CtrlPCInc=0
+	F28= CtrlIMem=0
+	F29= CtrlASIDIn=0
+	F30= CtrlCP0=0
+	F31= CtrlEPCIn=0
+	F32= CtrlExCodeIn=0
+	F33= CtrlIR=0
+
+MEM	F34= CtrlPC=0
+	F35= CtrlPCInc=0
+	F36= CtrlIMem=0
+	F37= CtrlASIDIn=0
+	F38= CtrlCP0=0
+	F39= CtrlEPCIn=0
+	F40= CtrlExCodeIn=0
+	F41= CtrlIR=0
+
+WB	F42= CtrlPC=0
+	F43= CtrlPCInc=0
+	F44= CtrlIMem=0
+	F45= CtrlASIDIn=0
+	F46= CtrlCP0=0
+	F47= CtrlEPCIn=0
+	F48= CtrlExCodeIn=0
+	F49= CtrlIR=0
+
+POST	F50= PC[Out]={addr[31:28],imm,2'b0}
+
